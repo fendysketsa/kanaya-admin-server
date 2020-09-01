@@ -1,0 +1,104 @@
+➤ Executing task [32mdeploy:prepare[39m
+↳ on [prod]
+[31m>[39m echo $0
+[1;30m< bash[0m
+[1;30m< [0m
+[31m>[39m if [ ! -d /home/admin/web/system.kanayamember.id/public_html ]; then mkdir -p /home/admin/web/system.kanayamember.id/public_html; fi
+[31m>[39m if [ ! -L /home/admin/web/system.kanayamember.id/public_html/current ] && [ -d /home/admin/web/system.kanayamember.id/public_html/current ]; then echo true; fi
+[31m>[39m cd /home/admin/web/system.kanayamember.id/public_html && if [ ! -d releases ]; then mkdir releases; fi
+[31m>[39m cd /home/admin/web/system.kanayamember.id/public_html && if [ ! -d shared ]; then mkdir shared; fi
+[32m•[39m done on [prod]
+[32m✔[39m Ok [1s 429ms]
+➤ Executing task [32mdeploy:release[39m
+↳ on [prod]
+[31m>[39m if [ -d /home/admin/web/system.kanayamember.id/public_html/releases/20200615114252 ]; then echo 'true'; fi
+[31m>[39m mkdir /home/admin/web/system.kanayamember.id/public_html/releases/20200615114252
+[31m>[39m cd /home/admin/web/system.kanayamember.id/public_html && if [ -h release ]; then rm release; fi
+[31m>[39m ln -s /home/admin/web/system.kanayamember.id/public_html/releases/20200615114252 /home/admin/web/system.kanayamember.id/public_html/release
+[32m•[39m done on [prod]
+[32m✔[39m Ok [567ms]
+➤ Executing task [32mdeploy:update_code[39m
+↳ on [prod]
+[31m>[39m which git
+[1;30m< /usr/bin/git[0m
+[1;30m< [0m
+[31m>[39m /usr/bin/git version
+[1;30m< git version 2.17.1[0m
+[1;30m< [0m
+[31m>[39m find /home/admin/web/system.kanayamember.id/public_html/releases -maxdepth 1 -mindepth 1 -type d
+[1;30m< /home/admin/web/system.kanayamember.id/public_html/releases/20200607063941[0m
+[1;30m< /home/admin/web/system.kanayamember.id/public_html/releases/20200429130947[0m
+[1;30m< /home/admin/web/system.kanayamember.id/public_html/releases/20200615114252[0m
+[1;30m< /home/admin/web/system.kanayamember.id/public_html/releases/20200429130759[0m
+[1;30m< [0m
+[31m>[39m readlink /home/admin/web/system.kanayamember.id/public_html/release
+[1;30m< /home/admin/web/system.kanayamember.id/public_html/releases/20200615114252[0m
+[1;30m< [0m
+[31m>[39m /usr/bin/git clone -b fendy --recursive -q --reference /home/admin/web/system.kanayamember.id/public_html/releases/20200607063941 --dissociate git@gitlab.com:fendysketsa/kanaya-admin.git  /home/admin/web/system.kanayamember.id/public_html/releases/20200615114252 2>&1
+[32m•[39m done on [prod]
+[32m✔[39m Ok [4s 28ms]
+➤ Executing task [32mdeploy:shared[39m
+↳ on [prod]
+[31m>[39m if [ -d $(echo /home/admin/web/system.kanayamember.id/public_html/releases/20200615114252/application/cache) ]; then rm -rf /home/admin/web/system.kanayamember.id/public_html/releases/20200615114252/application/cache; fi
+[31m>[39m mkdir -p /home/admin/web/system.kanayamember.id/public_html/shared/application/cache
+[31m>[39m mkdir -p `dirname /home/admin/web/system.kanayamember.id/public_html/releases/20200615114252/application/cache`
+[31m>[39m ln -nfs /home/admin/web/system.kanayamember.id/public_html/shared/application/cache /home/admin/web/system.kanayamember.id/public_html/releases/20200615114252/application/cache
+[31m>[39m if [ -d $(echo /home/admin/web/system.kanayamember.id/public_html/releases/20200615114252/application/logs) ]; then rm -rf /home/admin/web/system.kanayamember.id/public_html/releases/20200615114252/application/logs; fi
+[31m>[39m mkdir -p /home/admin/web/system.kanayamember.id/public_html/shared/application/logs
+[31m>[39m mkdir -p `dirname /home/admin/web/system.kanayamember.id/public_html/releases/20200615114252/application/logs`
+[31m>[39m ln -nfs /home/admin/web/system.kanayamember.id/public_html/shared/application/logs /home/admin/web/system.kanayamember.id/public_html/releases/20200615114252/application/logs
+[32m•[39m done on [prod]
+[32m✔[39m Ok [1s 132ms]
+➤ Executing task [32mdeploy:writable[39m
+↳ on [prod]
+[31m>[39m ps axo user,comm | grep -E '[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx' | grep -v root | head -1 | cut -d\  -f1
+[1;30m< admin[0m
+[1;30m< [0m
+[31m>[39m cd /home/admin/web/system.kanayamember.id/public_html/releases/20200615114252 && chmod 2>&1; true
+[1;30m< chmod: missing operand[0m
+[1;30m< Try 'chmod --help' for more information.[0m
+[1;30m< [0m
+[31m>[39m cd /home/admin/web/system.kanayamember.id/public_html/releases/20200615114252 && if hash setfacl 2>/dev/null; then echo 'true'; fi
+[1;30m< true[0m
+[1;30m< [0m
+[31m>[39m cd /home/admin/web/system.kanayamember.id/public_html/releases/20200615114252 && getfacl -p application/cache | grep "^user:admin:.*w" | wc -l
+[1;30m< 1[0m
+[1;30m< [0m
+[31m>[39m cd /home/admin/web/system.kanayamember.id/public_html/releases/20200615114252 && getfacl -p application/logs | grep "^user:admin:.*w" | wc -l
+[1;30m< 1[0m
+[1;30m< [0m
+[32m•[39m done on [prod]
+[32m✔[39m Ok [735ms]
+➤ Executing task [32mdeploy:vendors[39m
+↳ on [prod]
+[31m>[39m if hash composer 2>/dev/null; then echo 'true'; fi
+[1;30m< true[0m
+[1;30m< [0m
+[31m>[39m which composer
+[1;30m< /usr/bin/composer[0m
+[1;30m< [0m
+[31m>[39m cd /home/admin/web/system.kanayamember.id/public_html/releases/20200615114252 &&  /usr/bin/composer install --no-dev --verbose --prefer-dist --optimize-autoloader --no-progress --no-interaction
+[1;30m< Loading composer repositories with package information[0m
+[1;30m< Updating dependencies[0m
+[1;30m< Dependency resolution completed in 0.341 seconds[0m
+[1;30m< Analyzed 8312 packages to resolve dependencies[0m
+[1;30m< Analyzed 337408 rules to resolve dependencies[0m
+[1;30m< Dependency resolution completed in 0.000 seconds[0m
+[1;30m< Writing lock file[0m
+[1;30m< Generating optimized autoload files[0m
+[1;30m< [0m
+[32m•[39m done on [prod]
+[32m✔[39m Ok [8s 555ms]
+➤ Executing task [32mdeploy:symlink[39m
+↳ on [prod]
+[31m>[39m cd /home/admin/web/system.kanayamember.id/public_html && ln -sfn /home/admin/web/system.kanayamember.id/public_html/releases/20200615114252 current
+[31m>[39m cd /home/admin/web/system.kanayamember.id/public_html && rm release
+[32m•[39m done on [prod]
+[32m✔[39m Ok [281ms]
+➤ Executing task [32mcleanup[39m
+↳ on [prod]
+[31m>[39m rm -rf /home/admin/web/system.kanayamember.id/public_html/releases/20200429130759
+[31m>[39m cd /home/admin/web/system.kanayamember.id/public_html && if [ -e release ]; then rm release; fi
+[31m>[39m cd /home/admin/web/system.kanayamember.id/public_html && if [ -h release ]; then rm release; fi
+[32m•[39m done on [prod]
+[32m✔[39m Ok [481ms]

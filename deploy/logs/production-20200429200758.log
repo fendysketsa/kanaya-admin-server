@@ -1,0 +1,89 @@
+➤ Executing task [32mdeploy:prepare[39m
+↳ on [prod]
+[31m>[39m echo $0
+[1;30m< bash[0m
+[1;30m< [0m
+[31m>[39m if [ ! -d /home/admin/web/system.kanayamember.id/public_html ]; then mkdir -p /home/admin/web/system.kanayamember.id/public_html; fi
+[31m>[39m if [ ! -L /home/admin/web/system.kanayamember.id/public_html/current ] && [ -d /home/admin/web/system.kanayamember.id/public_html/current ]; then echo true; fi
+[31m>[39m cd /home/admin/web/system.kanayamember.id/public_html && if [ ! -d releases ]; then mkdir releases; fi
+[31m>[39m cd /home/admin/web/system.kanayamember.id/public_html && if [ ! -d shared ]; then mkdir shared; fi
+[32m•[39m done on [prod]
+[32m✔[39m Ok [1s 268ms]
+➤ Executing task [32mdeploy:release[39m
+↳ on [prod]
+[31m>[39m if [ -d /home/admin/web/system.kanayamember.id/public_html/releases/20200429130759 ]; then echo 'true'; fi
+[31m>[39m mkdir /home/admin/web/system.kanayamember.id/public_html/releases/20200429130759
+[31m>[39m cd /home/admin/web/system.kanayamember.id/public_html && if [ -h release ]; then rm release; fi
+[31m>[39m ln -s /home/admin/web/system.kanayamember.id/public_html/releases/20200429130759 /home/admin/web/system.kanayamember.id/public_html/release
+[32m•[39m done on [prod]
+[32m✔[39m Ok [1s 159ms]
+➤ Executing task [32mdeploy:update_code[39m
+↳ on [prod]
+[31m>[39m which git
+[1;30m< /usr/bin/git[0m
+[1;30m< [0m
+[31m>[39m /usr/bin/git version
+[1;30m< git version 2.17.1[0m
+[1;30m< [0m
+[31m>[39m find /home/admin/web/system.kanayamember.id/public_html/releases -maxdepth 1 -mindepth 1 -type d
+[1;30m< /home/admin/web/system.kanayamember.id/public_html/releases/20200429130759[0m
+[1;30m< [0m
+[31m>[39m readlink /home/admin/web/system.kanayamember.id/public_html/release
+[1;30m< /home/admin/web/system.kanayamember.id/public_html/releases/20200429130759[0m
+[1;30m< [0m
+[31m>[39m /usr/bin/git clone -b fendy  --recursive -q git@gitlab.com:fendysketsa/kanaya-admin.git /home/admin/web/system.kanayamember.id/public_html/releases/20200429130759 2>&1
+[32m•[39m done on [prod]
+[32m✔[39m Ok [13s 448ms]
+➤ Executing task [32mdeploy:shared[39m
+↳ on [prod]
+[31m>[39m if [ -d $(echo /home/admin/web/system.kanayamember.id/public_html/releases/20200429130759/application/cache) ]; then rm -rf /home/admin/web/system.kanayamember.id/public_html/releases/20200429130759/application/cache; fi
+[31m>[39m mkdir -p /home/admin/web/system.kanayamember.id/public_html/shared/application/cache
+[31m>[39m mkdir -p `dirname /home/admin/web/system.kanayamember.id/public_html/releases/20200429130759/application/cache`
+[31m>[39m ln -nfs /home/admin/web/system.kanayamember.id/public_html/shared/application/cache /home/admin/web/system.kanayamember.id/public_html/releases/20200429130759/application/cache
+[31m>[39m if [ -d $(echo /home/admin/web/system.kanayamember.id/public_html/releases/20200429130759/application/logs) ]; then rm -rf /home/admin/web/system.kanayamember.id/public_html/releases/20200429130759/application/logs; fi
+[31m>[39m mkdir -p /home/admin/web/system.kanayamember.id/public_html/shared/application/logs
+[31m>[39m mkdir -p `dirname /home/admin/web/system.kanayamember.id/public_html/releases/20200429130759/application/logs`
+[31m>[39m ln -nfs /home/admin/web/system.kanayamember.id/public_html/shared/application/logs /home/admin/web/system.kanayamember.id/public_html/releases/20200429130759/application/logs
+[32m•[39m done on [prod]
+[32m✔[39m Ok [1s 374ms]
+➤ Executing task [32mdeploy:writable[39m
+↳ on [prod]
+[31m>[39m ps axo user,comm | grep -E '[a]pache|[h]ttpd|[_]www|[w]ww-data|[n]ginx' | grep -v root | head -1 | cut -d\  -f1
+[1;30m< admin[0m
+[1;30m< [0m
+[31m>[39m cd /home/admin/web/system.kanayamember.id/public_html/releases/20200429130759 && chmod 2>&1; true
+[1;30m< chmod: missing operand[0m
+[1;30m< Try 'chmod --help' for more information.[0m
+[1;30m< [0m
+[31m>[39m cd /home/admin/web/system.kanayamember.id/public_html/releases/20200429130759 && if hash setfacl 2>/dev/null; then echo 'true'; fi
+[1;30m< true[0m
+[1;30m< [0m
+[31m>[39m cd /home/admin/web/system.kanayamember.id/public_html/releases/20200429130759 && sudo setfacl -R -m u:"admin":rwX -m u:`whoami`:rwX application/cache application/logs
+[37;41m                                                                            [39;49m
+[37;41m  Unable to setup correct permissions for writable dirs.                    [39;49m
+[37;41m  You need to configure sudo's sudoers files to not prompt for password,    [39;49m
+[37;41m  or setup correct permissions manually.                                    [39;49m
+[37;41m                                                                            [39;49m
+[33mIn PhpSecLib.php line 124:[39m
+[37;41m                                                         [39;49m
+[37;41m  [RuntimeException]                                     [39;49m
+[37;41m  sudo: no tty present and no askpass program specified  [39;49m
+[37;41m                                                         [39;49m
+
+[33mException trace:[39m
+  at [32m/home/fendy/coding/kanaya-admin/vendor/deployer/deployer/src/Server/Remote/PhpSecLib.php:124[39m
+ Deployer\Server\Remote\PhpSecLib->run() at [32m/home/fendy/coding/kanaya-admin/vendor/deployer/deployer/src/functions.php:296[39m
+ run() at [32m/home/fendy/coding/kanaya-admin/vendor/deployer/deployer/recipe/common.php:297[39m
+ {closure}() at [32mn/a:n/a[39m
+ call_user_func() at [32m/home/fendy/coding/kanaya-admin/vendor/deployer/deployer/src/Task/Task.php:79[39m
+ Deployer\Task\Task->run() at [32m/home/fendy/coding/kanaya-admin/vendor/deployer/deployer/src/Executor/SeriesExecutor.php:43[39m
+ Deployer\Executor\SeriesExecutor->run() at [32m/home/fendy/coding/kanaya-admin/vendor/deployer/deployer/src/Console/TaskCommand.php:82[39m
+ Deployer\Console\TaskCommand->execute() at [32m/home/fendy/coding/kanaya-admin/vendor/symfony/console/Command/Command.php:255[39m
+ Symfony\Component\Console\Command\Command->run() at [32m/home/fendy/coding/kanaya-admin/vendor/symfony/console/Application.php:987[39m
+ Symfony\Component\Console\Application->doRunCommand() at [32m/home/fendy/coding/kanaya-admin/vendor/symfony/console/Application.php:255[39m
+ Symfony\Component\Console\Application->doRun() at [32m/home/fendy/coding/kanaya-admin/vendor/symfony/console/Application.php:148[39m
+ Symfony\Component\Console\Application->run() at [32m/home/fendy/coding/kanaya-admin/vendor/deployer/deployer/src/Deployer.php:101[39m
+ Deployer\Deployer->run() at [32m/home/fendy/coding/kanaya-admin/vendor/deployer/deployer/bin/dep:64[39m
+
+[32mdeploy [-p|--parallel][39m
+
