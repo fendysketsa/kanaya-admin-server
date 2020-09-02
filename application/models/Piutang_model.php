@@ -111,6 +111,7 @@ class Piutang_model extends CI_Model
            
            $this->db->order_by('transaksi_angsuran.tanggal');
            $this->db->where('transaksi_angsuran.status',0);
+           $this->db->where('member.account','real');
            $this->db->group_by('transaksi.id');
             $result = $this->db->get($this->table)->result_array();
 
@@ -154,6 +155,7 @@ class Piutang_model extends CI_Model
            $this->db->order_by('transaksi_angsuran.tanggal');
          //  $this->db->where('transaksi_angsuran.status',0);
            $this->db->group_by('transaksi.id');
+           $this->db->where('member.account','real');
             $result = $this->db->get($this->table)->result_array();
 
           // echo '<pre>'.print_r($result, true) .'</pre>';
