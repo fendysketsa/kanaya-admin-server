@@ -160,11 +160,11 @@ function dataAttribute() {
 			"searchable": false,
 			"orderable": false,
 			"class": "index",
-			"targets": [0, 3, 4]
+			"targets": [0, 1, 3, 4]
 		}],
 		fixedColumns: true,
 		"order": [
-			[6, 'DESC']
+			[0, 'DESC']
 		],
 		"paging": true,
 		"processing": true,
@@ -176,6 +176,18 @@ function dataAttribute() {
 		"deferRender": true,
 		"aLengthMenu": [5, 10, 15, 25, 50],
 		"pageLength": 10,
+		dom: 'lBfrtip',
+		buttons: [{
+			extend: 'pdf',
+			className: 'text-left',
+			autoFilter: true,
+			filename: 'data-pemesanan',
+			title: 'Laporan Pemesanan Produk',
+			messageTop: function () {
+				return "Tanggal: " + $("#range_date").attr('data')
+			},
+			sheetName: 'Data Pemesanan'
+		}, ],
 		"columns": [{
 				'data': 'id',
 				render: function (data, type, row, meta) {
@@ -237,7 +249,19 @@ function dataAttribute() {
 			// },
 			
 
-		]
+		],
+			"initComplete": function (settings, json) {
+			$("div.dt-buttons").css({
+				'margin-left': '200px',
+				'position': 'absolute'
+			})
+			$("div.dt-buttons").find('span').html('<i class="fa fa-download" aria-hidden="true"></i> Export PDF')
+			$("div.dt-buttons").find('button').addClass('btn btn-success')
+			$("div#dataView_length").css({
+				'position': 'absolute'
+			})
+
+		}
 
 	});
 
@@ -251,6 +275,23 @@ function dataAttribute() {
 	loadFormEdit();
 	remove();
 	
+	$('input.dr-picker').daterangepicker({
+		autoUpdateInput: false,
+		locale: {
+			cancelLabel: 'Batal'
+		}
+	});
+
+	$('input.dr-picker').on('apply.daterangepicker', function (ev, picker) {
+		$(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+		table_.columns(1).search($(this).val()).draw()
+		$(this).attr('data', $(this).val())
+	});
+
+	$('input.dr-picker').on('cancel.daterangepicker', function (ev, picker) {
+		$(this).val('');
+		table_.columns(1).search('').draw().ajax.reload()
+	});
 }
 
 function loadTable(table_) {

@@ -19,7 +19,7 @@ class Penjualan extends CI_Controller
     }
 
     public function index()
-    {
+    { 
         $data = [
             'meta' => [
                 'meta' => 'dashboard/partial/meta',

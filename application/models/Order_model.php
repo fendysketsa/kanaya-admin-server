@@ -4,6 +4,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Order_model extends CI_Model
 {
 
+	function __construct()
+	{
+		  parent::__construct();
+		 $this->load->helper('global');
+	}
+
 
 	protected $table = 'transaksi';
 
@@ -65,9 +71,22 @@ class Order_model extends CI_Model
 
 	public function dataFilter($search = null)
 	{
+
+		//echo '<pre>'.print_r($search) .'</pre>';
 		if (!empty($search['search'])) {
-			$this->db->like('nama', $search['search']);
+
+			$this->db->like('member.nama', $search['search']);
 		}
+
+
+		 if (!empty($search['search_tanggal'])) {
+            $tanggal = explode(" - ", $search['search_tanggal']);
+
+           // echo '<pre>'.print_r($tanggal, true).'</pre>';
+            $this->db->where('DATE(transaksi.tanggal) >=', convertDate($tanggal[0], '/', '-'));
+            $this->db->where('DATE(transaksi.tanggal) <=', convertDate($tanggal[1], '/', '-'));
+        }
+
 
 		$this->db->select('pegawai.nama as pegawai, transaksi.*, member.nama as member, produk.nama as produk, transaksi_detail.jumlah, transaksi_detail.harga_produk');
 		$this->db->order_by($this->table . '.' . $search['order_field'], $search['order_ascdesc']);

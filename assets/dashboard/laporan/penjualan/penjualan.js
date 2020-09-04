@@ -84,7 +84,7 @@ function dataAttribute() {
 
 		}
 
-	});
+	}); 
 
 	$('input.dr-picker').daterangepicker({
 		autoUpdateInput: false,

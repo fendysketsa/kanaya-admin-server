@@ -31,9 +31,8 @@ class Order extends CI_Controller
 				'meta' => 'dashboard/partial/meta',
 				'title' => 'Admin -  Data - Order | Dashboard',
 				'css' => [
-					'assets/dashboard/vendor/datatables/dataTables.bootstrap4.min.css',
-					'assets/dashboard/upload/image-uploader.min.css',
-					'assets/dashboard/css/datepicker.min.css',
+					 'assets/dashboard/vendor/datatables/dataTables.bootstrap4.min.css',
+                    'assets/dashboard/css/daterangepicker.css',
 				],
 			],
 			'sidebar' => 'dashboard/partial/sidebar',
@@ -48,10 +47,9 @@ class Order extends CI_Controller
 			],
 			'footer' => [
 				'js' => [
-					'assets/dashboard/vendor/datatables/jquery.dataTables.min.js',
-					'assets/dashboard/vendor/datatables/dataTables.bootstrap4.min.js',
-					'assets/dashboard/upload/image-uploader.min.js',
-					'assets/dashboard/js/datepicker.min.js',
+				       'assets/dashboard/vendor/datatables/jquery.dataTables.min.js',
+                    'assets/dashboard/vendor/datatables/dataTables.bootstrap4.min.js',
+                    'assets/dashboard/js/demo/daterangepicker.js',
 					'assets/dashboard/master/order/order.js',
 				],
 				'footer' => 'dashboard/partial/footer',
@@ -80,6 +78,7 @@ class Order extends CI_Controller
 		$sc['order_index'] = $_POST['order'][0]['column'];
 		$sc['order_field'] = $_POST['columns'][$sc['order_index']]['data'];
 		$sc['order_ascdesc'] = $_POST['order'][0]['dir'];
+		$sc['search_tanggal'] = $_POST['columns'][1]['search']['value'];
 		$sc['search'] = $_POST['search']['value'];
 		return $this->order->json($sc);
 	}
