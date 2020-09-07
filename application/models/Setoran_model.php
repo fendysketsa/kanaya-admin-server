@@ -98,133 +98,132 @@ class Setoran_model extends CI_Model
 	}
 
 	public function report($data)
-    {
-        
-        
+	{
 
-        $datum = [];
 
-          $lunas = $this->get_penjualan_cash($data);
 
-        // echo '<pre>'.print_r($lunas, true) .'</pre>'; die();
-         $cicilan = $this->get_penjualan_cicilan($data);
+		$datum = [];
 
-         return [
-         	"lunas"   => $lunas,
-         	"cicilan" => $cicilan,
-         ];
-        // echo '<pre>'.print_r($cicilan, true) .'</pre>'; die();
+		$lunas = $this->get_penjualan_cash($data);
 
-       
-          
-      
+		// echo '<pre>'.print_r($lunas, true) .'</pre>'; die();
+		$cicilan = $this->get_penjualan_cicilan($data);
 
-        //     echo '<pre>'.print_r($result, true).'<pre>';  
-        
-    }
+		return [
+			"lunas"   => $lunas,
+			"cicilan" => $cicilan,
+		];
+		// echo '<pre>'.print_r($cicilan, true) .'</pre>'; die();
 
-    public function get_penjualan_cash($data)
-    {
-    	//echo $data['start_date']; die();
-    	$this->db->select('transaksi.id as transaksi_id, transaksi.total_biaya,transaksi.status,transaksi.cara_bayar,produk.harga_hpp,produk.harga_jual,transaksi.tanggal,transaksi_detail.jumlah');
-    	 if($data['type'] != 'all') {
-           $this->db->where('transaksi.tanggal >=', $data['start_date']);
-           $this->db->where('transaksi.tanggal <=', $data['end_date']);  
-         }
-         $this->db->join('transaksi_detail','transaksi.id = transaksi_detail.transaksi_id');
-         $this->db->join('produk','produk.id = transaksi_detail.produk_id');
-         $this->db->join('member', 'transaksi.member_id = member.id');
-         $this->db->where('transaksi.status','success');
-         $this->db->where('transaksi.cara_bayar','lunas');
-         $this->db->where('member.account','real');
 
-         $data = $this->db->get('transaksi')->result_array();
 
-     // echo '<pre>'.print_r($data, true).'</pre>';
 
-         $i = 0;
-         $trx_id = 0;
-         $total_penjualan = 0;
-         $hpp = 0;
-         $harga_produk = 0;
-         foreach ($data as $trx) {
-         	  if($trx_id != $trx['transaksi_id']) {
-         	  	$total_penjualan = $total_penjualan + $trx['total_biaya'];
-         	  }
-         	  $hpp = $hpp + ($trx['jumlah'] * $trx['harga_hpp']);
-         	  $harga_produk = $harga_produk + ($trx['jumlah'] * $trx['harga_jual']);
-         	  $trx_id = $trx['transaksi_id'];
-         	$i++;
-         }
 
-         $adm = $total_penjualan - $harga_produk;
-         $laba_kotor = $harga_produk - $hpp;
+		//     echo '<pre>'.print_r($result, true).'<pre>';  
 
-         return [
-         	"total_penjualan" => $total_penjualan,
-         	"penjualan_cash"  => $total_penjualan - $adm,
-         	"adm"             => $adm,
-         	"hpp"             => $hpp,
-         	"laba_kotor"      => $laba_kotor,
-         ];
-    }
+	}
 
-    public function get_penjualan_cicilan($data)
-    {
-    	// $this->db->query("SET sql_mode=(SELECT REPLACE(@@sql_mode, 'ONLY_FULL_GROUP_BY', ''));");
-        $this->db->where('transaksi.cara_bayar', 'cicilan');
-        $this->db->select('(transaksi.total_biaya - (SELECT SUM(nominal) from log_transaksi_cicilan where transaksi_id = transaksi.id)) as piutang,(SELECT SUM(nominal) from log_transaksi_cicilan where transaksi_id = transaksi.id) as terbayar, pegawai.nama as marketing, transaksi.total_biaya as total_tagihan, transaksi.tanggal as tanggal_bayar,transaksi.id as transaksi_id,transaksi.cara_bayar,produk.harga_hpp,produk.harga_jual,transaksi.tanggal,transaksi_detail.jumlah,transaksi.total_biaya');
-        $this->db->where('transaksi.status','proses');
-        $this->db->join('pegawai', 'transaksi.marketing_id = pegawai.id');
-        $this->db->join('member', 'transaksi.member_id = member.id');
-        $this->db->join('member_detail', 'member_detail.member_id = member.id','left');
-        $this->db->join('transaksi_detail','transaksi.id = transaksi_detail.transaksi_id');
-        $this->db->join('produk','produk.id = transaksi_detail.produk_id');
-      //  $this->db->join('transaksi_angsuran', 'transaksi_angsuran.transaksi_id = transaksi.id', 'left');
-        $this->db->where('member.account','real');
-        if($data['type'] != 'all') {
-             $this->db->where('transaksi.tanggal >=', $data['start_date']);
-            $this->db->where('transaksi.tanggal <=', $data['end_date']);  
-         }
-           
-       // $this->db->order_by('transaksi_angsuran.tanggal');
-         //  $this->db->where('transaksi_angsuran.status',0);
-      //  $this->db->group_by('transaksi.id');
-        $data = $this->db->get('transaksi')->result_array();
+	public function get_penjualan_cash($data)
+	{
+		//echo $data['start_date']; die();
+		$this->db->select('transaksi.id as transaksi_id, transaksi.total_biaya,transaksi.status,transaksi.cara_bayar,produk.harga_hpp,produk.harga_jual,transaksi.tanggal,transaksi_detail.jumlah');
+		if ($data['type'] != 'all') {
+			$this->db->where('transaksi.tanggal >=', $data['start_date']);
+			$this->db->where('transaksi.tanggal <=', $data['end_date']);
+		}
+		$this->db->join('transaksi_detail', 'transaksi.id = transaksi_detail.transaksi_id');
+		$this->db->join('produk', 'produk.id = transaksi_detail.produk_id');
+		$this->db->join('member', 'transaksi.member_id = member.id');
+		$this->db->where('transaksi.status', 'success');
+		$this->db->where('transaksi.cara_bayar', 'lunas');
+		$this->db->where('member.account', 'real');
 
-        //echo '<pre>'.print_r($data, true).'</pre>'; 
-        //die();
-         $i = 0;
-         $trx_id = 0;
-         $total_penjualan = 0;
-         $hpp = 0;
-         $harga_produk = 0;
-         $piutang = 0;
-         $bayar   = 0;
-         $hutang  = 0;
-          foreach ($data as $trx) {
-         	  if($trx_id != $trx['transaksi_id']) {
-         	  	$total_penjualan = $total_penjualan + $trx['total_biaya'];
-         	  	$bayar = $bayar + $trx['terbayar'];
-         	  }
-         	  $hpp = $hpp + ($trx['jumlah'] * $trx['harga_hpp']);
-         	  $harga_produk = $harga_produk + ($trx['jumlah'] * $trx['harga_jual']);
-         	  $trx_id = $trx['transaksi_id'];
-         	$i++;
-         }
-         $hutang = $total_penjualan - $bayar;
-         $adm = $total_penjualan - $harga_produk;
-         $laba_kotor = $harga_produk - $hpp;
+		$data = $this->db->get('transaksi')->result_array();
 
-         return [
-         	"total_penjualan" => $total_penjualan,
-         	"penjualan_cicil" => $total_penjualan - $adm,
-         	"bayar"           => $bayar,
-         	"hutang"          => $hutang,
-         	"adm"             => $adm,
-         	"hpp"             => $hpp,
-         	"laba_kotor"      => $laba_kotor,
-         ];
-    }
+		// echo '<pre>'.print_r($data, true).'</pre>';
 
+		$i = 0;
+		$trx_id = 0;
+		$total_penjualan = 0;
+		$hpp = 0;
+		$harga_produk = 0;
+		foreach ($data as $trx) {
+			if ($trx_id != $trx['transaksi_id']) {
+				$total_penjualan = $total_penjualan + $trx['total_biaya'];
+			}
+			$hpp = $hpp + ($trx['jumlah'] * $trx['harga_hpp']);
+			$harga_produk = $harga_produk + ($trx['jumlah'] * $trx['harga_jual']);
+			$trx_id = $trx['transaksi_id'];
+			$i++;
+		}
+
+		$adm = $total_penjualan - $harga_produk;
+		$laba_kotor = $harga_produk - $hpp;
+
+		return [
+			"total_penjualan" => $total_penjualan,
+			"penjualan_cash"  => $total_penjualan - $adm,
+			"adm"             => $adm,
+			"hpp"             => $hpp,
+			"laba_kotor"      => $laba_kotor,
+		];
+	}
+
+	public function get_penjualan_cicilan($data)
+	{
+		// $this->db->query("SET sql_mode=(SELECT REPLACE(@@sql_mode, 'ONLY_FULL_GROUP_BY', ''));");
+		$this->db->where('transaksi.cara_bayar', 'cicilan');
+		$this->db->select('(transaksi.total_biaya - (SELECT SUM(nominal) from log_transaksi_cicilan where transaksi_id = transaksi.id)) as piutang,(SELECT SUM(nominal) from log_transaksi_cicilan where transaksi_id = transaksi.id) as terbayar, pegawai.nama as marketing, transaksi.total_biaya as total_tagihan, transaksi.tanggal as tanggal_bayar,transaksi.id as transaksi_id,transaksi.cara_bayar,produk.harga_hpp,produk.harga_jual,transaksi.tanggal,transaksi_detail.jumlah,transaksi.total_biaya');
+		$this->db->where('transaksi.status', 'proses');
+		$this->db->join('pegawai', 'transaksi.marketing_id = pegawai.id');
+		$this->db->join('member', 'transaksi.member_id = member.id');
+		$this->db->join('member_detail', 'member_detail.member_id = member.id', 'left');
+		$this->db->join('transaksi_detail', 'transaksi.id = transaksi_detail.transaksi_id');
+		$this->db->join('produk', 'produk.id = transaksi_detail.produk_id');
+		//  $this->db->join('transaksi_angsuran', 'transaksi_angsuran.transaksi_id = transaksi.id', 'left');
+		$this->db->where('member.account', 'real');
+		if ($data['type'] != 'all') {
+			$this->db->where('transaksi.tanggal >=', $data['start_date']);
+			$this->db->where('transaksi.tanggal <=', $data['end_date']);
+		}
+
+		// $this->db->order_by('transaksi_angsuran.tanggal');
+		//  $this->db->where('transaksi_angsuran.status',0);
+		//  $this->db->group_by('transaksi.id');
+		$data = $this->db->get('transaksi')->result_array();
+
+		//echo '<pre>'.print_r($data, true).'</pre>'; 
+		//die();
+		$i = 0;
+		$trx_id = 0;
+		$total_penjualan = 0;
+		$hpp = 0;
+		$harga_produk = 0;
+		$piutang = 0;
+		$bayar   = 0;
+		$hutang  = 0;
+		foreach ($data as $trx) {
+			if ($trx_id != $trx['transaksi_id']) {
+				$total_penjualan = $total_penjualan + $trx['total_biaya'];
+				$bayar = $bayar + $trx['terbayar'];
+			}
+			$hpp = $hpp + ($trx['jumlah'] * $trx['harga_hpp']);
+			$harga_produk = $harga_produk + ($trx['jumlah'] * $trx['harga_jual']);
+			$trx_id = $trx['transaksi_id'];
+			$i++;
+		}
+		$hutang = $total_penjualan - $bayar;
+		$adm = $total_penjualan - $harga_produk;
+		$laba_kotor = $harga_produk - $hpp;
+
+		return [
+			"total_penjualan" => $total_penjualan,
+			"penjualan_cicil" => $total_penjualan - $adm,
+			"bayar"           => $bayar,
+			"hutang"          => $hutang,
+			"adm"             => $adm,
+			"hpp"             => $hpp,
+			"laba_kotor"      => $laba_kotor,
+		];
+	}
 }

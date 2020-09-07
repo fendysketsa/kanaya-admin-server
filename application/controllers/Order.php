@@ -31,8 +31,8 @@ class Order extends CI_Controller
 				'meta' => 'dashboard/partial/meta',
 				'title' => 'Admin -  Data - Order | Dashboard',
 				'css' => [
-					 'assets/dashboard/vendor/datatables/dataTables.bootstrap4.min.css',
-                    'assets/dashboard/css/daterangepicker.css',
+					'assets/dashboard/vendor/datatables/dataTables.bootstrap4.min.css',
+					'assets/dashboard/css/daterangepicker.css',
 				],
 			],
 			'sidebar' => 'dashboard/partial/sidebar',
@@ -47,9 +47,9 @@ class Order extends CI_Controller
 			],
 			'footer' => [
 				'js' => [
-				       'assets/dashboard/vendor/datatables/jquery.dataTables.min.js',
-                    'assets/dashboard/vendor/datatables/dataTables.bootstrap4.min.js',
-                    'assets/dashboard/js/demo/daterangepicker.js',
+					'assets/dashboard/vendor/datatables/jquery.dataTables.min.js',
+					'assets/dashboard/vendor/datatables/dataTables.bootstrap4.min.js',
+					'assets/dashboard/js/demo/daterangepicker.js',
 					'assets/dashboard/master/order/order.js',
 				],
 				'footer' => 'dashboard/partial/footer',
@@ -147,18 +147,14 @@ class Order extends CI_Controller
 
 		redirect('admin/order');
 	}
-	
+
 	public function print($id)
-    {
-        $data = $this->order->detail_trx($id);
+	{
+		$data = $this->order->detail_trx($id);
 
-        $data['admin'] = $this->session->userdata('username');
-         
+		$data['admin'] = $this->session->userdata('username');
 
-        $this->load->view('dashboard/master/order/invoice', $data);
 
-       
-    }
-
+		$this->load->view('dashboard/master/order/invoice', $data);
+	}
 }
-

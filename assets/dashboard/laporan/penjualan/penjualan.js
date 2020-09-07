@@ -46,28 +46,28 @@ function dataAttribute() {
 				return "Tanggal: " + $("#range_date").attr('data')
 			},
 			sheetName: 'Data Penjualan'
-		}, ],
+		},],
 		"columns": [{
-				'data': 'id',
-				render: function (data, type, row, meta) {
-					return meta.row + meta.settings._iDisplayStart + 1;
-				}
-			},
-			{
-				"data": "tanggal_bayar"
-			},
-			{
-				"data": "member"
-			},
-			{
-				"data": "nominal"
-			},
-			{
-				"data": "marketing"
-			},
-			{
-				"data": "cara_bayar"
-			},
+			'data': 'id',
+			render: function (data, type, row, meta) {
+				return meta.row + meta.settings._iDisplayStart + 1;
+			}
+		},
+		{
+			"data": "tanggal_bayar"
+		},
+		{
+			"data": "member"
+		},
+		{
+			"data": "nominal"
+		},
+		{
+			"data": "marketing"
+		},
+		{
+			"data": "cara_bayar"
+		},
 
 
 		],
@@ -84,7 +84,7 @@ function dataAttribute() {
 
 		}
 
-	}); 
+	});
 
 	$('input.dr-picker').daterangepicker({
 		autoUpdateInput: false,

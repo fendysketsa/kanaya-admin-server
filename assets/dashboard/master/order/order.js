@@ -187,55 +187,55 @@ function dataAttribute() {
 				return "Tanggal: " + $("#range_date").attr('data')
 			},
 			sheetName: 'Data Pemesanan'
-		}, ],
+		},],
 		"columns": [{
-				'data': 'id',
-				render: function (data, type, row, meta) {
-					return meta.row + meta.settings._iDisplayStart + 1;
-				}
-			},
-			{
-				"data": "member"
-			},
-			{
-				"data": "pegawai"
-			},
-			{
-				"data": "no_transaksi"
-			},
-			{
-				"data" : "produk"
-			},
-			{
-				"data" : "jumlah"
-			},
-			{
-				"data" : "tanggal"
-			},
-			{
-				"data" : "harga_produk"
-			},
-			{
-				"data" : "status_produk"
-			},
-			{
-				"render": function (data, type, row) {
-					// var html = `<span class="btn-group">
-					// 				<a href="javascript:void(0);" class="edit text-info" data-id="` + row.id + `">
-					// 					<em class="fa fa-edit"></em></a>&nbsp;
-					// 			</span>
-					// 	`;
+			'data': 'id',
+			render: function (data, type, row, meta) {
+				return meta.row + meta.settings._iDisplayStart + 1;
+			}
+		},
+		{
+			"data": "member"
+		},
+		{
+			"data": "pegawai"
+		},
+		{
+			"data": "no_transaksi"
+		},
+		{
+			"data": "produk"
+		},
+		{
+			"data": "jumlah"
+		},
+		{
+			"data": "tanggal"
+		},
+		{
+			"data": "harga_produk"
+		},
+		{
+			"data": "status_produk"
+		},
+		{
+			"render": function (data, type, row) {
+				// var html = `<span class="btn-group">
+				// 				<a href="javascript:void(0);" class="edit text-info" data-id="` + row.id + `">
+				// 					<em class="fa fa-edit"></em></a>&nbsp;
+				// 			</span>
+				// 	`;
 
-					// return html
-					var html = `<span class="btn-group">
-									<a href="`+'/admin/order/print/' + row.id + `" target="_blank">
+				// return html
+				var html = `<span class="btn-group">
+									<a href="`+ '/admin/order/print/' + row.id + `" target="_blank">
 										<em class="fa fa-print"></em></a>&nbsp;
 								</span>
 						`;
 
-					return html
-				} 
-			},
+				return html
+			}
+		},
 			// {
 			// 	"render": function (data, type, row) {
 			// 		var html = `<span class="btn-group">
@@ -247,10 +247,10 @@ function dataAttribute() {
 			// 		return html
 			// 	} 
 			// },
-			
+
 
 		],
-			"initComplete": function (settings, json) {
+		"initComplete": function (settings, json) {
 			$("div.dt-buttons").css({
 				'margin-left': '200px',
 				'position': 'absolute'
@@ -274,7 +274,7 @@ function dataAttribute() {
 
 	loadFormEdit();
 	remove();
-	
+
 	$('input.dr-picker').daterangepicker({
 		autoUpdateInput: false,
 		locale: {

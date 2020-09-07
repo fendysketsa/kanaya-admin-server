@@ -6,8 +6,8 @@ class Order_model extends CI_Model
 
 	function __construct()
 	{
-		  parent::__construct();
-		 $this->load->helper('global');
+		parent::__construct();
+		$this->load->helper('global');
 	}
 
 
@@ -39,7 +39,7 @@ class Order_model extends CI_Model
 
 		return $this->db->update($this->table, $data);
 	}
-	
+
 	public function deleteId($id)
 	{
 		$this->db->where("id", $id);
@@ -79,13 +79,13 @@ class Order_model extends CI_Model
 		}
 
 
-		 if (!empty($search['search_tanggal'])) {
-            $tanggal = explode(" - ", $search['search_tanggal']);
+		if (!empty($search['search_tanggal'])) {
+			$tanggal = explode(" - ", $search['search_tanggal']);
 
-           // echo '<pre>'.print_r($tanggal, true).'</pre>';
-            $this->db->where('DATE(transaksi.tanggal) >=', convertDate($tanggal[0], '/', '-'));
-            $this->db->where('DATE(transaksi.tanggal) <=', convertDate($tanggal[1], '/', '-'));
-        }
+			// echo '<pre>'.print_r($tanggal, true).'</pre>';
+			$this->db->where('DATE(transaksi.tanggal) >=', convertDate($tanggal[0], '/', '-'));
+			$this->db->where('DATE(transaksi.tanggal) <=', convertDate($tanggal[1], '/', '-'));
+		}
 
 
 		$this->db->select('pegawai.nama as pegawai, transaksi.*, member.nama as member, produk.nama as produk, transaksi_detail.jumlah, transaksi_detail.harga_produk');
@@ -116,33 +116,33 @@ class Order_model extends CI_Model
 		header('Content-Type: application/json');
 		echo json_encode($callback);
 	}
-	
+
 	public function detail_trx($id)
-    {
-        $this->db->where('transaksi.id', $id);
-        $this->db->select('pegawai.nama as pegawai, pegawai.alamat as alamat_pegawai,pegawai.telepon as pegawai_telepon, transaksi.*, member.nama as member,member.telepon, member_detail.*, kecamatan.nama as kecamatan, kota.nama as kota, provinsi.nama as provinsi, kecamatan.kode_pos');
-        $this->db->join('pegawai','transaksi.marketing_id = pegawai.id');
-        $this->db->join('member','transaksi.member_id = member.id');
-        $this->db->join('member_detail','member_detail.member_id = member.id','left');
-        $this->db->join('kecamatan','member_detail.kecamatan_id = kecamatan.id','left');
-        $this->db->join('kota','kota.id = kecamatan.kota_id','left');
-        $this->db->join('provinsi','kota.provinsi_id = kota.provinsi_id','left');
-        $trx = $this->db->get($this->table)->result_array();
+	{
+		$this->db->where('transaksi.id', $id);
+		$this->db->select('pegawai.nama as pegawai, pegawai.alamat as alamat_pegawai,pegawai.telepon as pegawai_telepon, transaksi.*, member.nama as member,member.telepon, member_detail.*, kecamatan.nama as kecamatan, kota.nama as kota, provinsi.nama as provinsi, kecamatan.kode_pos');
+		$this->db->join('pegawai', 'transaksi.marketing_id = pegawai.id');
+		$this->db->join('member', 'transaksi.member_id = member.id');
+		$this->db->join('member_detail', 'member_detail.member_id = member.id', 'left');
+		$this->db->join('kecamatan', 'member_detail.kecamatan_id = kecamatan.id', 'left');
+		$this->db->join('kota', 'kota.id = kecamatan.kota_id', 'left');
+		$this->db->join('provinsi', 'kota.provinsi_id = kota.provinsi_id', 'left');
+		$trx = $this->db->get($this->table)->result_array();
 
-        $this->db->select('transaksi_detail.*, produk.*');
-        $this->db->where('transaksi_id', $id);
-        $this->db->join('produk','transaksi_detail.produk_id = produk.id','left');
-        $detail = $this->db->get('transaksi_detail')->result_array();
+		$this->db->select('transaksi_detail.*, produk.*');
+		$this->db->where('transaksi_id', $id);
+		$this->db->join('produk', 'transaksi_detail.produk_id = produk.id', 'left');
+		$detail = $this->db->get('transaksi_detail')->result_array();
 
-        $this->db->where('transaksi_id', $id);
-        $angsuran = $this->db->get("transaksi_angsuran")->result_array(); 
+		$this->db->where('transaksi_id', $id);
+		$angsuran = $this->db->get("transaksi_angsuran")->result_array();
 
-        return [
-                "transaksi" => $trx[0],
-                "detail" => $detail,
-                "angsuran" => $angsuran,
-              ];       
-    }
+		return [
+			"transaksi" => $trx[0],
+			"detail" => $detail,
+			"angsuran" => $angsuran,
+		];
+	}
 
 
 	public function update_log($id, $data)
@@ -150,5 +150,4 @@ class Order_model extends CI_Model
 		$this->db->where('id', $id);
 		return $this->db->update('log_transaksi_cicilan', $data);
 	}
-
 }
