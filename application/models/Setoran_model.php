@@ -133,8 +133,10 @@ class Setoran_model extends CI_Model
          }
          $this->db->join('transaksi_detail','transaksi.id = transaksi_detail.transaksi_id');
          $this->db->join('produk','produk.id = transaksi_detail.produk_id');
+         $this->db->join('member', 'transaksi.member_id = member.id');
          $this->db->where('transaksi.status','success');
          $this->db->where('transaksi.cara_bayar','lunas');
+         $this->db->where('member.account','real');
 
          $data = $this->db->get('transaksi')->result_array();
 
@@ -176,9 +178,10 @@ class Setoran_model extends CI_Model
         $this->db->join('pegawai', 'transaksi.marketing_id = pegawai.id');
         $this->db->join('member', 'transaksi.member_id = member.id');
         $this->db->join('member_detail', 'member_detail.member_id = member.id','left');
-         $this->db->join('transaksi_detail','transaksi.id = transaksi_detail.transaksi_id');
-         $this->db->join('produk','produk.id = transaksi_detail.produk_id');
+        $this->db->join('transaksi_detail','transaksi.id = transaksi_detail.transaksi_id');
+        $this->db->join('produk','produk.id = transaksi_detail.produk_id');
       //  $this->db->join('transaksi_angsuran', 'transaksi_angsuran.transaksi_id = transaksi.id', 'left');
+        $this->db->where('member.account','real');
         if($data['type'] != 'all') {
              $this->db->where('transaksi.tanggal >=', $data['start_date']);
             $this->db->where('transaksi.tanggal <=', $data['end_date']);  

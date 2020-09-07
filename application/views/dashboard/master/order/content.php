@@ -30,6 +30,20 @@
                     </h6>
 
                 </div>
+                 <div class="row mb-3">
+                        <div class="col-lg-4">
+                            <div class="card px-2 py-2">
+                                <div class="input-group to-date">
+                                    <span class="input-group-addon">
+                                        <em class="fa fa-calendar"></em>
+                                    </span>
+                                    <input type="text" id="range_date" name="range_date" class="form-control dr-picker"
+                                        placeholder="Isikan tanggal awal sampai akhir">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
                 <div class="card-body">
                     <div class="load-data">
                         <em class="fa fa-spin fa-spinner"></em> Loading...

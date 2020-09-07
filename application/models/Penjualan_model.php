@@ -92,6 +92,7 @@ class Penjualan_model extends CI_Model
             $this->db->join('member', 'transaksi.member_id = member.id');
             $this->db->where('transaksi.tanggal >=', $data['start_date']);
             $this->db->where('transaksi.tanggal <=', $data['end_date']);
+            $this->db->where('member.account','real');
             // $this->db->where('role.nama','marketing');
             if($data['marketing'] != 'all') {
                 $this->db->where('pegawai.id', $data['marketing']);
@@ -105,6 +106,7 @@ class Penjualan_model extends CI_Model
             $this->db->join('member', 'transaksi.member_id = member.id');
             $this->db->where('transaksi.tanggal >=', $data['start_date']);
             $this->db->where('transaksi.tanggal <=', $data['end_date']);
+            $this->db->where('member.account','real');
             // $this->db->where('role.nama','marketing');
             if($data['marketing'] != 'all') {
                 $this->db->where('pegawai.id', $data['marketing']);
@@ -149,6 +151,7 @@ class Penjualan_model extends CI_Model
             $this->db->join('diskon', 'transaksi_detail.diskon_id = diskon.id', 'left');
             $this->db->where('transaksi.tanggal >=', $data['start_date']);
             $this->db->where('transaksi.tanggal <=', $data['end_date']);
+            $this->db->where('member.account','real');
             // $this->db->where('role.nama','marketing');
             if($data['marketing'] != 'all') {
                 $this->db->where('pegawai.id', $data['marketing']);
